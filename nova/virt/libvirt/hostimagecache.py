@@ -188,6 +188,7 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
                             CONF.instances_path,
                             CONF.image_cache_subdirectory_name,
                             cache_id)       
+        #TODO:remove may raise exceptions like permission and can't find the file
         os.remove(cache_path)
         self.conductor_api.host_imagecache_delete(context, self.host, cache_id)
 

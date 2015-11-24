@@ -226,7 +226,7 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
         ignore_imagecaches.append(backfile_filename)
 
     #4.check and remove old image cache
-    host_imagecache_manager.check_or_remove_imagecache(context, ignore_imagecaches)
+    #host_imagecache_manager.check_or_remove_imagecache(context, ignore_imagecaches)
 
 #liaojie
 def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
