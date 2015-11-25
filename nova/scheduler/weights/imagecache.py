@@ -1,35 +1,44 @@
 #liaojie
-#TODO:finish imagecache
-"""
-RAM Weigher.  Weigh hosts by their RAM usage.
 
-The default is to spread instances across all hosts evenly.  If you prefer
-stacking, you can set the 'ram_weight_multiplier' option to a negative
-number and the weighing has the opposite effect of the default.
+"""
+ImageCache Weigher.  Weigh hosts by their matching image cache.
 """
 
 from oslo_config import cfg
 
 from nova.scheduler import weights
 
-ram_weight_opts = [
-        cfg.FloatOpt('ram_weight_multiplier',
+import hashlib
+
+#TODO:add the option in conf file
+imagecache_weight_opts = [
+        cfg.FloatOpt('imagecache_weight_multiplier',
                      default=1.0,
-                     help='Multiplier used for weighing ram.  Negative '
-                          'numbers mean to stack vs spread.'),
+                     help='Multiplier used for weighing imagecache.' ),
 ]
 
 CONF = cfg.CONF
-CONF.register_opts(ram_weight_opts)
+CONF.register_opts(imagecache_weight_opts)
 
-
-class RAMWeigher(weights.BaseHostWeigher):
+class ImageCacheWeigher(weights.BaseHostWeigher):
     minval = 0
 
     def weight_multiplier(self):
         """Override the weight multiplier."""
-        return CONF.ram_weight_multiplier
+        return CONF.imagecache_weight_multiplier
 
     def _weigh_object(self, host_state, weight_properties):
-        """Higher weights win.  We want spreading to be the default."""
-        return host_state.free_ram_mb
+        """Higher weights win."""
+        #TODO:find more scheduler weights to score 
+        def get_cache_id(image_id):
+            return hashlib.sha1(image_id).hexdigest()
+
+        instance_image_id=weight_properties.get('request_spec').get('image').get('id')
+        instance_cache_id=get_cache_id(instance_image_id)
+        res_val=0
+        for imagecache in host_state.imagecaches:
+            if instance_cache_id == imagecache.cache_id:
+                res_val=1
+                break
+
+        return res_val
