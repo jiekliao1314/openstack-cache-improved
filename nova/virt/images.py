@@ -190,7 +190,7 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
     fetch the image_href and its backing file 
     used in building instance
     """
-    #get info of backfile
+    #get info of backing_file
     image_meta=IMAGE_API.get(context, image_href)
     backfile_href=image_meta['properties'].get('base_id', None)
     if backfile_href:
@@ -211,7 +211,8 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
         else:
             fetch_to_raw(context, image_href, path, user_id, project_id, max_size)
             
-    #3.update the image cache 
+    #3.update the image cache in host 
+    #TODO:more graceful
     ignore_imagecaches=[]
     cache_id=get_cache_id(image_href)
     host_imagecache_manager.update_imagecache(context, 
@@ -226,6 +227,7 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
         ignore_imagecaches.append(backfile_filename)
 
     #4.check and remove old image cache
+    #TODO:more graceful
     #host_imagecache_manager.check_or_remove_imagecache(context, ignore_imagecaches)
 
 #liaojie
@@ -281,4 +283,4 @@ def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
     #TODO:how to get the size
     host_imagecache_manager.update_imagecache(context, 
                                 get_cache_id(image_href),
-                                image_meta['properties'].get('max_size', 0))
+                                image_meta['properties'].get('cache_size_mb', 0))

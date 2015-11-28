@@ -2851,8 +2851,8 @@ class LibvirtDriver(driver.ComputeDriver):
     #liaojie
     def create_imagecache(self, context, image_id):
         #LOG.warn('create_imagecache in driver is called!')
-        filename=hashlib.sha1(image_id).hexdigest()
-        #filename=image_id
+        #filename=hashlib.sha1(image_id).hexdigest()
+        filename=image_id
         backend=imagebackend.ImageCache(filename)#NOTE:use my own imagebackend
         fetch_func=libvirt_utils.fetch_imagecache
         backend.cache(fetch_func=fetch_func,

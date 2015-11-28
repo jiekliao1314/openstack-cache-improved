@@ -38,6 +38,7 @@ class HostImageCacheController(object):
             msg = _("Invalid request body: %s") % ex
             raise webob.exc.HTTPBadRequest(explanation=msg)
 
+        #TODO:maybe we should test whether the host is alive
         compute_nodes = self.host_api.compute_node_get_all(context)
         local_hosts=[]
         for compute_node in compute_nodes:
@@ -47,6 +48,7 @@ class HostImageCacheController(object):
             raise webob.exc.HTTPBadRequest(explanation=msg)
 
         for image_id in image_ids:
+            #NOTE:now we use nova-compute cast to realize the concurrence
             self.compute_rpcapi.cache_host_image(context, host, image_id)
             #NOTE:now we can just use dbgp test only one image cache processing 
             #break
