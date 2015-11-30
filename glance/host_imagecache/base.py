@@ -17,19 +17,21 @@ class ImageCacheManager(object):
         hosts=self.get_hosts()
         images=self.get_images()
 
-        #NOTE:now we just test
         for host in hosts:
+            #NOTE:just cache images in host alive
+            if host.state != 'up' or host.status != 'enabled':
+                continue
             print '############'
             print 'host:'+host.host_name
             selected_images=[]
             for image in images:
                 if self.should_cache_image(host, image):
                     selected_images.append(copy.deepcopy(image))
-                    print 'image:'+image.image_id
+                    print 'selected image:'+image.image_id
             self.filter_image_cache(host, selected_images)
             print '-----------'
             for image in selected_images:
-                print image.image_id
+                print 'final image:'+image.image_id
         
             self.cache_host(host, selected_images)
         
@@ -44,6 +46,9 @@ class ImageCacheManager(object):
         result=self.nova_cs.host_imagecache.create(host.host_name, image_ids)
 
     def should_cache_image(self, host, image):
+        if image.status != 'active':
+            return False
+
         used_scale=image.used_scale
         random_num=random.random()
         if random_num < used_scale:
@@ -88,22 +93,18 @@ class ImageCacheManager(object):
         """
         get the info of hosts
         """
-        #TODO:use nova api hypervisor instead to get detailed information about hosts 
-        #get the active host
-        hosts=self.nova_cs.hosts.list()
-        host_names=set([host.host_name for host in hosts])
+        hosts=self.nova_cs.hypervisors.list()
         #NOTE:used for test
         cache_disk_ratio=0.0
 
         result=[]
-
-        for hostname in host_names:
-            info=self.nova_cs.hosts.get(hostname)
-            total_disk_mb=info[0].disk_gb*1024
+        for host in hosts:
+            total_disk_mb=host.local_gb*1024
             #TODO:how to get the cache_disk_mb of host
             cache_disk_mb=int(total_disk_mb * cache_disk_ratio)
+            #NOTE:for testing
             cache_disk_mb=300
-            host_state=HostState(hostname, cache_disk_mb) 
+            host_state=HostState(host.hypervisor_hostname, host.state, host.status, cache_disk_mb) 
             result.append(host_state)
         
         return result
@@ -128,8 +129,10 @@ class HostState(object):
     encapsulate the host info
     """
     #TODO:add more info about host to help the image cache download
-    def __init__(self, host_name, cache_disk_mb):
+    def __init__(self, host_name, state, status,  cache_disk_mb):
         self.host_name=host_name
+        self.state=state
+        self.status=status
         self.cache_disk_mb=cache_disk_mb
 
 

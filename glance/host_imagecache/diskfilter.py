@@ -1,5 +1,5 @@
 #liaojie
-
+#This is obsolete
 class DiskFilter(object):
     """
     one of filters.

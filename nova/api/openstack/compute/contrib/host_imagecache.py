@@ -38,7 +38,7 @@ class HostImageCacheController(object):
             msg = _("Invalid request body: %s") % ex
             raise webob.exc.HTTPBadRequest(explanation=msg)
 
-        #TODO:maybe we should test whether the host is alive
+        #NOTE:we use the host_api get the host info like the hypervisor in nova-api
         compute_nodes = self.host_api.compute_node_get_all(context)
         local_hosts=[]
         for compute_node in compute_nodes:

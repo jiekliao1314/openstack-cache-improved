@@ -45,10 +45,11 @@ CONF = cfg.CONF
 CONF.register_opts(image_opts)
 IMAGE_API = image.API()
 
-def get_cache_id(image_id):
+def _get_cache_id(image_id):
     """
     Return a filename based on the SHA1 hash of a given image ID.
     """
+    #NOTE:now this func is related to hostimagecache get_cache_id,but it is not in libvirt dir
     return hashlib.sha1(image_id).hexdigest()
 
 def qemu_img_info(path):
@@ -214,7 +215,7 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
     #3.update the image cache in host 
     #TODO:more graceful
     ignore_imagecaches=[]
-    cache_id=get_cache_id(image_href)
+    cache_id=_get_cache_id(image_href)
     host_imagecache_manager.update_imagecache(context, 
                                 cache_id,
                                 image_meta['properties'].get('max_size', 0))
@@ -279,8 +280,8 @@ def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
     else:
         #base image:download to raw
         fetch_and_convert(context, image_href, path, "raw")
+
     #update the imagecache db 
-    #TODO:how to get the size
     host_imagecache_manager.update_imagecache(context, 
-                                get_cache_id(image_href),
+                                _get_cache_id(image_href),
                                 image_meta['properties'].get('cache_size_mb', 0))

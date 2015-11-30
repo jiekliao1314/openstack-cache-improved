@@ -1,5 +1,5 @@
 #liaojie
-
+#This is obsolete
 class ImageWeighter(object):
     """
     one of weighters.
