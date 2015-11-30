@@ -21,6 +21,7 @@ class ImageCacheManager(object):
             #NOTE:just cache images in host alive
             if host.state != 'up' or host.status != 'enabled':
                 continue
+
             print '############'
             print 'host:'+host.host_name
             selected_images=[]
@@ -114,7 +115,6 @@ class ImageState(object):
     """
     encapsulate the image info
     """
-    #TODO: Add more info about image to help the image filter or weigher
     def __init__(self, image_id, status, cache_size_mb, used_scale):
         """
         :param used_scale the ratio of used scale
@@ -128,7 +128,6 @@ class HostState(object):
     """
     encapsulate the host info
     """
-    #TODO:add more info about host to help the image cache download
     def __init__(self, host_name, state, status,  cache_disk_mb):
         self.host_name=host_name
         self.state=state

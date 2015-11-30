@@ -103,7 +103,8 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
     def _get_max_imagecache_disk(self):
 
         #TODO:more complexity
-        return CONF.libvirt.max_imagecache_disk
+        #return CONF.libvirt.max_imagecache_disk
+        return 0
 
     def _list_backing_images(self, context):
         """List the backing images currently in use."""
@@ -113,7 +114,6 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
         self.instance_names = running['instance_names']
         inuse_images = []
         for ent in os.listdir(CONF.instances_path):
-            #TODO:how to deal with the self.instance_names
             if ent in self.instance_names:
                 disk_path = os.path.join(CONF.instances_path, ent, 'disk')
                 if os.path.exists(disk_path):
@@ -163,14 +163,21 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
             return None
 
     def _remove_imagecache(self, context, cache_id):
+        if not cache_id:
+            return
 
-        #TODO:exception
         cache_path = os.path.join(
                             CONF.instances_path,
                             CONF.image_cache_subdirectory_name,
                             cache_id)       
         #TODO:remove may raise exceptions like permission and can't find the file
-        os.remove(cache_path)
+        try:
+            os.remove(cache_path)
+        except OSError as e:
+            LOG.error(_LE('Failed to remove %(cache_path)s, '
+                              'error was %(error)s'),
+                          {'cache_path': cache_path,
+                           'error': e})
         self.conductor_api.host_imagecache_delete(context, self.host, cache_id)
 
     def update_imagecache(self, context, cache_id, size=0):

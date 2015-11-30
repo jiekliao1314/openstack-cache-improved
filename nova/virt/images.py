@@ -195,7 +195,7 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
     image_meta=IMAGE_API.get(context, image_href)
     backfile_href=image_meta['properties'].get('base_id', None)
     if backfile_href:
-        backfile_filename=hashlib.sha1(backfile_href).hexdigest()
+        backfile_filename=_get_cache_id(backfile_href)
         backfile_path=os.path.join(os.path.dirname(path), backfile_filename)
     
     #1.check and download image_href's backing_file
@@ -218,18 +218,18 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
     cache_id=_get_cache_id(image_href)
     host_imagecache_manager.update_imagecache(context, 
                                 cache_id,
-                                image_meta['properties'].get('max_size', 0))
+                                image_meta['properties'].get('cache_size_mb', 0))
     ignore_imagecaches.append(cache_id)
     if backfile_href:
         backfile_image_meta=IMAGE_API.get(context, backfile_href)
         host_imagecache_manager.update_imagecache(context, 
                                     backfile_filename,
-                                    backfile_image_meta['properties'].get('max_size', 0))
+                                    backfile_image_meta['properties'].get('cache_size_mb', 0))
         ignore_imagecaches.append(backfile_filename)
 
     #4.check and remove old image cache
-    #TODO:more graceful
-    #host_imagecache_manager.check_or_remove_imagecache(context, ignore_imagecaches)
+    #TODO:use a thread to do this
+    host_imagecache_manager.check_or_remove_imagecache(context, ignore_imagecaches)
 
 #liaojie
 def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
