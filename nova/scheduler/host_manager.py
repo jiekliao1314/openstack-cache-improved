@@ -583,8 +583,8 @@ class HostManager(object):
 
     #liaojie
     def _add_imagecache_info(self, context, compute, host_state):
-        #NOTE:now we can't use conductor to get the info,why?
         #TODO:is there a more elegant way to get the info?
+        #maybe you can use objects to get the info ?
         host=compute.host
         imagecaches=db.host_imagecache_get_all_by_host(context, host)
         host_state.imagecaches=imagecaches
