@@ -170,14 +170,15 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
                             CONF.instances_path,
                             CONF.image_cache_subdirectory_name,
                             cache_id)       
-        #TODO:remove may raise exceptions like permission and can't find the file
-        try:
-            os.remove(cache_path)
-        except OSError as e:
-            LOG.error(_LE('Failed to remove %(cache_path)s, '
-                              'error was %(error)s'),
-                          {'cache_path': cache_path,
-                           'error': e})
+        if os.path.exists(cache_path):
+            try:
+                os.remove(cache_path)
+            except OSError as e:
+                if os.path.exists(cache_path):
+                    LOG.warn(_LE('Failed to remove %(cache_path)s, '
+                                      'error was %(error)s'),
+                                  {'cache_path': cache_path,
+                                   'error': e})
         self.conductor_api.host_imagecache_delete(context, self.host, cache_id)
 
     def update_imagecache(self, context, cache_id, size=0):
