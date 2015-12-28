@@ -326,6 +326,8 @@ class Instance(BASE, NovaBase):
     # Records whether an instance has been deleted from disk
     cleaned = Column(Integer, default=0)
 
+    # instance owner
+    owner_id = Column(String(255))
 
 class InstanceInfoCache(BASE, NovaBase):
     """Represents a cache of information about an instance

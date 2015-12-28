@@ -2068,7 +2068,7 @@ def instance_get_all_by_filters_sort(context, filters, limit=None, marker=None,
     exact_match_filter_names = ['project_id', 'user_id', 'image_ref',
                                 'vm_state', 'instance_type_id', 'uuid',
                                 'metadata', 'host', 'task_state',
-                                'system_metadata']
+                                'system_metadata', 'owner_id']
 
     # Filter the query
     query_prefix = _exact_instance_filter(query_prefix,
