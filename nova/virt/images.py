@@ -216,13 +216,13 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
     #TODO:more graceful
     ignore_imagecaches=[]
     cache_id=_get_cache_id(image_href)
-    host_imagecache_manager.update_imagecache(context, 
+    host_imagecache_manager.increase_survival_value(context, 
                                 cache_id,
                                 image_meta['properties'].get('cache_size_mb', 0))
     ignore_imagecaches.append(cache_id)
     if backfile_href:
         backfile_image_meta=IMAGE_API.get(context, backfile_href)
-        host_imagecache_manager.update_imagecache(context, 
+        host_imagecache_manager.increase_survival_value(context, 
                                     backfile_filename,
                                     backfile_image_meta['properties'].get('cache_size_mb', 0))
         ignore_imagecaches.append(backfile_filename)
@@ -233,6 +233,7 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
 
 #liaojie
 def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
+    #NOTE:used for host_imagecache pre-processing    
     """
     fetch the image_href and cache it 
     used in cache pre-fetching
@@ -282,6 +283,9 @@ def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
         fetch_and_convert(context, image_href, path, "raw")
 
     #update the imagecache db 
-    host_imagecache_manager.update_imagecache(context, 
+    host_imagecache_manager.increase_survival_value(context, 
                                 _get_cache_id(image_href),
                                 image_meta['properties'].get('cache_size_mb', 0))
+    #liaojie test-time
+    import datetime
+    LOG.error("Caching host image("+image_href+") end time=="+datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))

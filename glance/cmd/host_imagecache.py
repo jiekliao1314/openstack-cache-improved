@@ -46,23 +46,15 @@ def cache_all(options, args):
     """
     #FIXME:as below
     """
-    root@gb09 ~]# glance-compute-cache cache-all
-    Traceback (most recent call last):
-      File "/usr/bin/glance-compute-cache", line 11, in <module>
-        sys.exit(main())
-      File "/usr/lib/python2.7/site-packages/glance/cmd/host_imagecache.py", line 312, in main
-        result = command(options, args)
-      File "/usr/lib/python2.7/site-packages/glance/cmd/host_imagecache.py", line 48, in cache_all
-        cachemanager=base.CacheManager(options)
-      File "/usr/lib/python2.7/site-packages/glance/host_imagecache/base.py", line 11, in __init__
-        self.glance_cs=client.get_glanceclient(options)
-      File "/usr/lib/python2.7/site-packages/glance/host_imagecache /client.py", line 231, in get_glanceclient
-        endpoint, token = _get_endpoint_and_token(args, service_type=service_type, force_auth=force_auth)
-      File "/usr/lib/python2.7/site-packages/glance/host_imagecache /client.py", line 148, in _get_endpoint_and_token
-        _("You must provide a username via"
     glanceclient.exc.CommandError: You must provide a username via either --os-username or env[OS_USERNAME]
     """
     #TODO:Add the progress of download
+    #liaojie test-time
+    with open("/root/cache-start-time.result","w") as f:
+        import datetime
+        start_time_str=datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+        f.write("cache start time=="+start_time_str+"\n")
+
     cachemanager=base.ImageCacheManager(options)
     cachemanager.cache_all(args)
 

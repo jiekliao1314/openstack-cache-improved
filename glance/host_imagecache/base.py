@@ -28,11 +28,9 @@ class ImageCacheManager(object):
             for image in images:
                 if self.should_cache_image(host, image):
                     selected_images.append(copy.deepcopy(image))
-                    print 'selected image:'+image.image_id
             self.filter_image_cache(host, selected_images)
-            print '-----------'
             for image in selected_images:
-                print 'final image:'+image.image_id
+                print 'cache image:'+image.image_id
         
             self.cache_host(host, selected_images)
         
@@ -104,7 +102,7 @@ class ImageCacheManager(object):
             #TODO:how to get the cache_disk_mb of host
             cache_disk_mb=int(total_disk_mb * cache_disk_ratio)
             #NOTE:for testing
-            cache_disk_mb=300
+            cache_disk_mb=15360
             host_state=HostState(host.hypervisor_hostname, host.state, host.status, cache_disk_mb) 
             result.append(host_state)
         

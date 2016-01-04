@@ -2341,6 +2341,10 @@ class LibvirtDriver(driver.ComputeDriver):
     # for xenapi(tr3buchet)
     def spawn(self, context, instance, image_meta, injected_files,
               admin_password, network_info=None, block_device_info=None):
+        #liaojie test-time
+        import datetime
+        start_time=datetime.datetime.now()
+        
         disk_info = blockinfo.get_disk_info(CONF.libvirt.virt_type,
                                             instance,
                                             image_meta,
@@ -2359,6 +2363,10 @@ class LibvirtDriver(driver.ComputeDriver):
                                         disk_info,
                                         block_device_info=block_device_info)
         LOG.debug("Instance is running", instance=instance)
+
+        end_time=datetime.datetime.now()
+        cost_time=(end_time - start_time).seconds
+        LOG.error("Booting vm( "+instance.uuid+" ) cost time=="+str(cost_time))
 
         def _wait_for_boot():
             """Called at an interval until the VM is running."""

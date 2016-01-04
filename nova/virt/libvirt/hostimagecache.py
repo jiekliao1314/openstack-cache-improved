@@ -1,9 +1,6 @@
 #liaojie
 """Image cache manager.
 
-The cache manager implements the specification at
-http://wiki.openstack.org/nova-image-cache-management.
-
 """
 
 import hashlib
@@ -82,13 +79,11 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
         self.conductor_api = conductor.API()
 
     def check_or_remove_imagecache(self, context, ignore_imagecaches):
-       #NOTE:
-        #check whether we should remove the unused LRU image cache
-        #if yes, then remove it in local and update the db
+        #NOTE:
+        #check whether we should remove the unused LFU image cache
         local_imagecache_size=self._get_all_local_imagecache_size(context)
-
         max_imagecache_disk=self._get_max_imagecache_disk()
-
+        #if yes, then remove it in local and update the db
         if local_imagecache_size >= max_imagecache_disk:
             selected_cache_id=self._select_discard_imagecache(context, ignore_imagecaches)
             self._remove_imagecache(context, selected_cache_id)
@@ -101,10 +96,10 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
         return result_size
 
     def _get_max_imagecache_disk(self):
-
         #TODO:more complexity
-        #return CONF.libvirt.max_imagecache_disk
-        return 0
+        #NOTE:this value must be the same as cache_disk_mb in glance/host_imagecache/base.py
+        cache_disk_mb=15360
+        return cache_disk_mb
 
     def _list_backing_images(self, context):
         """List the backing images currently in use."""
@@ -147,7 +142,6 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
         return inuse_images
 
     def _select_discard_imagecache(self, context, ignore_imagecaches):
-
         #TODO:now the processing is simple 
         active_imagecaches=self._list_backing_images(context)
         selected=[]
@@ -156,6 +150,7 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
             cache_id=imagecache['cache_id']
             if cache_id not in active_imagecaches and cache_id not in ignore_imagecaches:
                 selected.append(imagecache)
+
         selected.sort(cmp=lambda x,y:x.get('survival_value')-y.get('survival_value'))   
         if selected:
             return selected[0]['cache_id']
@@ -181,7 +176,7 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
                                    'error': e})
         self.conductor_api.host_imagecache_delete(context, self.host, cache_id)
 
-    def update_imagecache(self, context, cache_id, size=0):
+    def increase_survival_value(self, context, cache_id, size=0):
         """
         values :host,cache_id, survival_value
         """
@@ -196,9 +191,27 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
         old_obj=self.conductor_api.host_imagecache_get(context, self.host, cache_id)
         if old_obj:
             survival_value=old_obj['survival_value']+1
+        else:
+            #missing
+            self.decrease_survival_value(context)
+
         values['survival_value']=survival_value
 
         self.conductor_api.host_imagecache_update(context, values)
+
+    def decrease_survival_value(self, context):
+        host_imagecaches=self.conductor_api.host_imagecache_get_all_by_host(context, self.host)
+        for imagecache in host_imagecaches:
+            values={}
+            values['host']=imagecache['host']
+            values['cache_id']=imagecache['cache_id']
+            values['size']=imagecache['size']
+
+            survival_val=imagecache['survival_value']
+            survival_val=survival_val/2
+            values['survival_value']=survival_val
+            self.conductor_api.host_imagecache_update(context, values)
+
 
 
 
