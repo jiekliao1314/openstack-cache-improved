@@ -176,10 +176,7 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
                                    'error': e})
         self.conductor_api.host_imagecache_delete(context, self.host, cache_id)
 
-    def increase_survival_value(self, context, cache_id, size=0):
-        """
-        values :host,cache_id, survival_value
-        """
+    def increase_survival_value(self, context, cache_id, size=0, start_survival_value=0):
         #NOTE:if image cache not exist, then create it with survival_value=0
         values={}
         values['host']=self.host
@@ -187,7 +184,7 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
         values['size']=size
 
         #TODO:the survival_value increase always,it may overflow
-        survival_value=0
+        survival_value=start_survival_value
         old_obj=self.conductor_api.host_imagecache_get(context, self.host, cache_id)
         if old_obj:
             survival_value=old_obj['survival_value']+1
@@ -208,8 +205,7 @@ class HostImageCacheManager(imagecache.ImageCacheManager):
             values['size']=imagecache['size']
 
             survival_val=imagecache['survival_value']
-            survival_val=survival_val/2
-            values['survival_value']=survival_val
+            values['survival_value']=survival_val if survival_val<=0 else survival_val-1
             self.conductor_api.host_imagecache_update(context, values)
 
 

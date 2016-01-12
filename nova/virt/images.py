@@ -216,15 +216,19 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
     #TODO:more graceful
     ignore_imagecaches=[]
     cache_id=_get_cache_id(image_href)
+    cache_size=int(image_meta['properties'].get('cache_size_mb', 0))
     host_imagecache_manager.increase_survival_value(context, 
                                 cache_id,
-                                image_meta['properties'].get('cache_size_mb', 0))
+                                cache_size,
+                                cache_size/1024)
     ignore_imagecaches.append(cache_id)
     if backfile_href:
         backfile_image_meta=IMAGE_API.get(context, backfile_href)
+        backfile_size=int(backfile_image_meta['properties'].get('cache_size_mb', 0))
         host_imagecache_manager.increase_survival_value(context, 
                                     backfile_filename,
-                                    backfile_image_meta['properties'].get('cache_size_mb', 0))
+                                    backfile_size,
+                                    backfile_size/1024)
         ignore_imagecaches.append(backfile_filename)
 
     #4.check and remove old image cache
@@ -283,9 +287,10 @@ def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
         fetch_and_convert(context, image_href, path, "raw")
 
     #update the imagecache db 
+    cache_size=int(image_meta['properties'].get('cache_size_mb', 0))
     host_imagecache_manager.increase_survival_value(context, 
                                 _get_cache_id(image_href),
-                                image_meta['properties'].get('cache_size_mb', 0))
+                                cache_size)
     #liaojie test-time
     import datetime
     LOG.error("Caching host image("+image_href+") end time=="+datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
