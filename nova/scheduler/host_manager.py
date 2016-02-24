@@ -158,6 +158,8 @@ class HostState(object):
         #liaojie
         # Imagecache on this host
         self.imagecaches=[]
+        # ImageInstance on all hosts
+        self.imageinstances=[]
 
         self.updated = None
         if compute:
@@ -567,6 +569,7 @@ class HostManager(object):
             host_state.update_service(dict(service.iteritems()))
             #liaojie
             self._add_imagecache_info(context, compute, host_state)
+            self._add_imageinstances_info(context, host_state)
 
             self._add_instance_info(context, compute, host_state)
             seen_nodes.add(state_key)
@@ -588,6 +591,14 @@ class HostManager(object):
         host=compute.host
         imagecaches=db.host_imagecache_get_all_by_host(context, host)
         host_state.imagecaches=imagecaches
+    
+    #liaojie
+    def _add_imageinstances_info(self, context, host_state):
+        host_state.imageinstances=[]
+        for instances_in_host in self._instance_info.values():
+            for instance in instances_in_host['instances'].values():
+                if not instance.deleted: 
+                    host_state.imageinstances.append(instance.image_ref)
 
     def _add_instance_info(self, context, compute, host_state):
         """Adds the host instance info to the host_state object.
@@ -601,6 +612,7 @@ class HostManager(object):
         """
         host_name = compute.host
         host_info = self._instance_info.get(host_name)
+        """
         if host_info and host_info.get("updated"):
             inst_dict = host_info["instances"]
         else:
@@ -608,6 +620,13 @@ class HostManager(object):
             inst_list = objects.InstanceList.get_by_host(context, host_name)
             inst_dict = {instance.uuid: instance
                          for instance in inst_list.objects}
+        """
+        #liaojie
+        #old version updates the info too slowly and gets errors
+        inst_list = objects.InstanceList.get_by_host(context, host_name)
+        inst_dict = {instance.uuid: instance
+                         for instance in inst_list.objects}
+
         host_state.instances = inst_dict
 
     def _recreate_instance_info(self, context, host_name):
