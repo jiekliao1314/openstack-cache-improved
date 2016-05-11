@@ -39,7 +39,7 @@ from nova.scheduler import weights
 from nova import utils
 from nova.virt import hardware
 
-#liaojie
+#jiekliao
 from nova import db
 
 host_manager_opts = [
@@ -155,7 +155,7 @@ class HostState(object):
         # Instances on this host
         self.instances = {}
 
-        #liaojie
+        #jiekliao
         # Imagecache on this host
         self.imagecaches=[]
         # ImageInstance on all hosts
@@ -567,7 +567,7 @@ class HostManager(object):
                                      self.host_aggregates_map[
                                          host_state.host]]
             host_state.update_service(dict(service.iteritems()))
-            #liaojie
+            #jiekliao
             self._add_imagecache_info(context, compute, host_state)
             self._add_imageinstances_info(context, host_state)
 
@@ -584,7 +584,7 @@ class HostManager(object):
 
         return self.host_state_map.itervalues()
 
-    #liaojie
+    #jiekliao
     def _add_imagecache_info(self, context, compute, host_state):
         #TODO:is there a more elegant way to get the info?
         #maybe you can use objects to get the info ?
@@ -592,7 +592,7 @@ class HostManager(object):
         imagecaches=db.host_imagecache_get_all_by_host(context, host)
         host_state.imagecaches=imagecaches
     
-    #liaojie
+    #jiekliao
     def _add_imageinstances_info(self, context, host_state):
         host_state.imageinstances=[]
         for instances_in_host in self._instance_info.values():
@@ -621,7 +621,7 @@ class HostManager(object):
             inst_dict = {instance.uuid: instance
                          for instance in inst_list.objects}
         """
-        #liaojie
+        #jiekliao
         #old version updates the info too slowly and gets errors
         inst_list = objects.InstanceList.get_by_host(context, host_name)
         inst_dict = {instance.uuid: instance

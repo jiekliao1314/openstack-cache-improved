@@ -6525,7 +6525,7 @@ def instance_tag_delete_all(context, instance_uuid):
         _check_instance_exists(context, session, instance_uuid)
         session.query(models.Tag).filter_by(resource_id=instance_uuid).delete()
 
-#liaojie
+#jiekliao
 def host_imagecache_create(context, values):
     """
     values:

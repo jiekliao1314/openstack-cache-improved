@@ -1,6 +1,6 @@
-#liaojie
-"""Image cache manager.
-
+#jiekliao
+"""
+Image cache manager.
 """
 
 import hashlib
@@ -22,7 +22,7 @@ from nova import utils
 from nova.virt import imagecache
 from nova.virt.libvirt import utils as libvirt_utils
 
-#liaojie
+#jiekliao
 from nova import image
 from nova import conductor
 from nova import objects

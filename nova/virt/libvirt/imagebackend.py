@@ -217,7 +217,7 @@ class Image(object):
         def fetch_func_sync(target, *args, **kwargs):
             # The image may have been fetched while a subsequent
             # call was waiting to obtain the lock.
-            #liaojie
+            #jiekliao
             #don't check
             #if not os.path.exists(target):
             fetch_func(target=target, *args, **kwargs)
@@ -477,7 +477,7 @@ class Qcow2(Image):
             if size:
                 disk.extend(target, size, use_cow=True)
         # Download the unmodified base image unless we already have a copy.
-        #liaojie
+        #jiekliao
         #put the cache check in prepare_template
         #if not os.path.exists(base):
         prepare_template(target=base, max_size=size, *args, **kwargs)
@@ -827,7 +827,7 @@ class Ploop(Image):
                                         remove=shutil.rmtree)
         with fileutils.remove_path_on_error(self.path, remove=remove_func):
             create_ploop_image(base, self.path, size)
-#liaojie
+#jiekliao
 class ImageCache(Image):
     def __init__(self, filename):
         super(ImageCache, self).__init__("file", "qcow2", is_block_dev=False)

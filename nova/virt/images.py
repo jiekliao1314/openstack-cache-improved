@@ -30,7 +30,7 @@ from nova.openstack.common import fileutils
 from nova.openstack.common import imageutils
 from nova import utils
 
-#liaojie
+#jiekliao
 import hashlib
 
 LOG = logging.getLogger(__name__)
@@ -144,7 +144,7 @@ def fetch_to_raw(context, image_href, path, user_id, project_id, max_size=0):
             os.rename(path_tmp, path)
 
 
-#liaojie
+#jiekliao
 def fetch_to_qcow2(context, image_href,path, user_id, project_id, max_size=0):
     path_tmp = "%s.part" % path
     fetch(context, image_href, path_tmp, user_id, project_id,
@@ -185,7 +185,7 @@ def fetch_to_qcow2(context, image_href,path, user_id, project_id, max_size=0):
         else:
             os.rename(path_tmp, path)
 
-#liaojie
+#jiekliao
 def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache_manager, max_size=0):
     """
     fetch the image_href and its backing file 
@@ -235,7 +235,7 @@ def fetch_to_all(context, image_href, path, user_id, project_id, host_imagecache
     #TODO:use a thread to do this
     host_imagecache_manager.check_or_remove_imagecache(context, ignore_imagecaches)
 
-#liaojie
+#jiekliao
 def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
     #NOTE:used for host_imagecache pre-processing    
     """
@@ -291,6 +291,3 @@ def fetch_to_cache(context, image_href, path, host_imagecache_manager) :
     host_imagecache_manager.increase_survival_value(context, 
                                 _get_cache_id(image_href),
                                 cache_size)
-    #liaojie test-time
-    import datetime
-    LOG.error("Caching host image("+image_href+") end time=="+datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))

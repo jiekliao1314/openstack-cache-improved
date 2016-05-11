@@ -1071,7 +1071,7 @@ class ComputeAPI(object):
                 version=version)
         cctxt.cast(ctxt, 'refresh_instance_security_rules',
                    instance=instance_p)
-    #liaojie
+    #jiekliao
     def cache_host_image(self, ctxt, host, image_id):
         version = self._compat_ver('4.0', '3.0')
         cctxt = self.client.prepare(server=host, version=version)

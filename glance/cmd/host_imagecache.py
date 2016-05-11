@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#liaojie
+#jiekliao
 
 """
 used for manage the compute node image cache
@@ -49,12 +49,6 @@ def cache_all(options, args):
     glanceclient.exc.CommandError: You must provide a username via either --os-username or env[OS_USERNAME]
     """
     #TODO:Add the progress of download
-    #liaojie test-time
-    with open("/root/cache-start-time.result","w") as f:
-        import datetime
-        start_time_str=datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
-        f.write("cache start time=="+start_time_str+"\n")
-
     cachemanager=base.ImageCacheManager(options)
     cachemanager.cache_all(args)
 

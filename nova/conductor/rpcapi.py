@@ -183,7 +183,7 @@ class ConductorAPI(object):
         self.client = rpc.get_client(target,
                                      version_cap=version_cap,
                                      serializer=serializer)
-    #liaojie
+    #jiekliao
     def host_imagecache_create(self, context, values):
         cctxt = self.client.prepare()
         return cctxt.call(context, 'host_imagecache_create',

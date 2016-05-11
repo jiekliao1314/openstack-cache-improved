@@ -47,7 +47,7 @@ from novaclient.v2 import virtual_interfaces
 from novaclient.v2 import volume_snapshots
 from novaclient.v2 import volume_types
 from novaclient.v2 import volumes
-#liaojie
+#jiekliao
 from novaclient.v2 import host_imagecache  
 
 class Client(object):
@@ -190,7 +190,7 @@ class Client(object):
         self.availability_zones = \
             availability_zones.AvailabilityZoneManager(self)
         self.server_groups = server_groups.ServerGroupsManager(self)
-        #liaojie
+        #jiekliao
         self.host_imagecache = host_imagecache.HostImageCacheManager(self)
 
         # Add in any extensions...

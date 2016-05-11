@@ -1,4 +1,4 @@
-#liaojie
+#jiekliao
 
 """
 ImageCache Weigher.  Weigh hosts by their matching image cache.
@@ -72,8 +72,4 @@ class ImageCacheWeigher(weights.BaseHostWeigher):
 
         #get the res_val
         res_val=has_imagecache+imagecache_utilization+imagecache_disk_utilization
-        print "----------------"+host_state.host+"--------------" 
-        print " imagecache_utilization score: %s" % imagecache_utilization
-        print " imagecache_disk_utilization score: %s" % imagecache_disk_utilization
-        print " imagecache weight score: %s" % res_val
         return res_val

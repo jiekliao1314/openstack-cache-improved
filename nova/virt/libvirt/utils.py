@@ -497,7 +497,7 @@ def get_fs_info(path):
 
 def fetch_image(context, target, image_id, user_id, project_id, host_imagecache_manager,  max_size=0):
     """Grab image."""
-    #liaojie
+    #jiekliao
     #changed for base and app image
     #images.fetch_to_raw(context, image_id, target, user_id, project_id,
     #                    max_size=max_size)
@@ -505,7 +505,7 @@ def fetch_image(context, target, image_id, user_id, project_id, host_imagecache_
                         host_imagecache_manager,
                         max_size=max_size)
 
-#liaojie
+#jiekliao
 def fetch_imagecache(context, target, image_id, host_imagecache_manager):
     """Grab imagecache."""
     images.fetch_to_cache(context, image_id, target, host_imagecache_manager)

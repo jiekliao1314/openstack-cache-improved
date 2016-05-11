@@ -194,7 +194,7 @@ class LocalAPI(object):
         return self._manager.object_backport(context, objinst, target_version)
 
 
-    #liaojie
+    #jiekliao
     def host_imagecache_create(self, context, values):
         return self._manager.host_imagecache_create(context, values)
 

@@ -6445,7 +6445,7 @@ class ComputeManager(manager.Manager):
             else:
                 self._process_instance_event(instance, event)
 
-    #liaojie           
+    #jiekliao           
     #disable the periodic_task so we can use our own image cache management
     """
     @periodic_task.periodic_task(spacing=CONF.image_cache_manager_interval,
@@ -6552,10 +6552,9 @@ class ComputeManager(manager.Manager):
             context, self.image_api, image_ref, instance)
         self.driver.unquiesce(context, instance, image_meta)
 
-    #liaojie
+    #jiekliao
     def cache_host_image(self, context, image_id):
         #TODO:deal with the exception and context as others
-        #LOG.info("cache_host_image in nova-compute is called!")
         self.driver.create_imagecache(context, image_id)
        
 # TODO(danms): This goes away immediately in Lemming and is just
@@ -6868,7 +6867,7 @@ class _ComputeV4Proxy(object):
     def unquiesce_instance(self, ctxt, instance, mapping=None):
         return self.manager.unquiesce_instance(ctxt, instance, mapping=mapping)
 
-    #liaojie
+    #jiekliao
     def cache_host_image(self, ctxt, image_id):
         return self.manager.cache_host_image(ctxt, image_id)
  

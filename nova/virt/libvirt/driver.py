@@ -105,7 +105,7 @@ from nova.virt import watchdog_actions
 from nova import volume
 from nova.volume import encryptors
 
-#liaojie
+#jiekliao
 from nova.virt.libvirt import hostimagecache
 
 
@@ -417,7 +417,7 @@ class LibvirtDriver(driver.ComputeDriver):
 
         self._disk_cachemode = None
         self.image_cache_manager = imagecache.ImageCacheManager()
-        #liaojie
+        #jiekliao
         self.host_imagecache_manager=hostimagecache.HostImageCacheManager(self._host.get_hostname())
 
         self.image_backend = imagebackend.Backend(CONF.use_cow_images)
@@ -2341,9 +2341,6 @@ class LibvirtDriver(driver.ComputeDriver):
     # for xenapi(tr3buchet)
     def spawn(self, context, instance, image_meta, injected_files,
               admin_password, network_info=None, block_device_info=None):
-        #liaojie test-time
-        import datetime
-        start_time=datetime.datetime.now()
         
         disk_info = blockinfo.get_disk_info(CONF.libvirt.virt_type,
                                             instance,
@@ -2364,9 +2361,6 @@ class LibvirtDriver(driver.ComputeDriver):
                                         block_device_info=block_device_info)
         LOG.debug("Instance is running", instance=instance)
 
-        end_time=datetime.datetime.now()
-        cost_time=(end_time - start_time).seconds
-        LOG.error("Booting vm( "+instance.uuid+" ) cost time=="+str(cost_time))
 
         def _wait_for_boot():
             """Called at an interval until the VM is running."""
@@ -2855,12 +2849,10 @@ class LibvirtDriver(driver.ComputeDriver):
         if CONF.libvirt.virt_type == 'uml':
             libvirt_utils.chown(image('disk').path, 'root')
 
-    #liaojie
+    #jiekliao
     def create_imagecache(self, context, image_id):
-        #LOG.warn('create_imagecache in driver is called!')
         #NOTE:for testing
         filename=hostimagecache.get_cache_id(image_id)
-        #filename=image_id
         backend=imagebackend.ImageCache(filename)#NOTE:use my own imagebackend
         fetch_func=libvirt_utils.fetch_imagecache
         backend.cache(fetch_func=fetch_func,
@@ -5900,7 +5892,7 @@ class LibvirtDriver(driver.ComputeDriver):
                         image_id=image_id,
                         user_id=instance.user_id,
                         project_id=instance.project_id,
-                        host_imagecache_manager=self.host_imagecache_manager, #liaojie
+                        host_imagecache_manager=self.host_imagecache_manager, #jiekliao
                         size=size)
         except exception.ImageNotFound:
             if not fallback_from_host:

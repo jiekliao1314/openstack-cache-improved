@@ -1473,7 +1473,7 @@ class Tag(BASE, models.ModelBase):
         foreign_keys=resource_id
     )
 
-#liaojie
+#jiekliao
 class HostImageCache(BASE, NovaBase):
     #TODO:more correctly
     __tablename__ = 'host_imagecache'

@@ -1992,7 +1992,7 @@ def instance_tag_delete_all(context, instance_uuid):
     """Delete all tags from the instance."""
     return IMPL.instance_tag_delete_all(context, instance_uuid)
 
-#liaojie
+#jiekliao
 def host_imagecache_create(context, values):
     """
     :param values: a dict like values={

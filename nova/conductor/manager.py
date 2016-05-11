@@ -459,7 +459,7 @@ class ConductorManager(manager.Manager):
     def object_backport(self, context, objinst, target_version):
         return objinst.obj_to_primitive(target_version=target_version)
 
-    #liaojie
+    #jiekliao
     def host_imagecache_create(self, context, values):
         return self.db.host_imagecache_create(context, values)
     
